@@ -69,12 +69,30 @@ entities:
         type: string
         name: sensor
         mapping:
+          - dps_val: Intialization
+            value: starting
+          - dps_val: Fault
+            value: fault
           - dps_val: Normal_shutdown
             value: idle
           - dps_val: Start
             value: starting
           - dps_val: Normal_operation
             value: heating
+            constraint: work_mode
+            conditions:
+              - dps_val: Cooling
+                value: cooling
+              - dps_val: Cooling_DHW
+                value: working
+          - dps_val: Return_oil_operation
+            value: working
+          - dps_val: Defrosting_operation
+            value: working
+      - id: 2
+        type: string
+        name: work_mode
+        hidden: true
   - entity: binary_sensor
     class: problem
     category: diagnostic

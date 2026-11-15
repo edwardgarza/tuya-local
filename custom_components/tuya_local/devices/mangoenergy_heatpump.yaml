@@ -1,0 +1,173 @@
+name: Heat pump water heater
+products:
+  - id: aao7qnhmxbra8cm5
+    manufacturer: Mango Energy
+entities:
+  - entity: water_heater
+    dps:
+      - id: 1
+        type: boolean
+        name: operation_mode
+        mapping:
+          - dps_val: false
+            value: "off"
+          - dps_val: true
+            constraint: preset
+            conditions:
+              - dps_val: Eco
+                value: eco
+              - dps_val: Standard
+                value: heat_pump
+              - dps_val: Turbo
+                value: performance
+      - id: 2
+        type: string
+        name: work_mode
+        hidden: true
+      - id: 4
+        type: integer
+        name: temperature
+        unit: C
+        range:
+          min: 35
+          max: 60
+        mapping:
+          - constraint: work_mode
+            conditions:
+              - dps_val: [Heating, Cooling, Heating_DHW, Cooling_DHW]
+                invalid: true
+      - id: 5
+        type: string
+        name: preset
+        hidden: true
+      - id: 21
+        type: integer
+        name: current_temperature
+  - entity: select
+    translation_key: heat_pump_mode
+    category: config
+    dps:
+      - id: 2
+        type: string
+        name: option
+        mapping:
+          - dps_val: DHW
+            value: hotwater
+          - dps_val: Heating
+            value: heat
+          - dps_val: Cooling
+            value: cool
+          - dps_val: Heating_DHW
+            value: hotwater_heat
+          - dps_val: Cooling_DHW
+            value: hotwater_cool
+  - entity: sensor
+    translation_key: status
+    class: enum
+    dps:
+      - id: 17
+        type: string
+        name: sensor
+        mapping:
+          - dps_val: Normal_shutdown
+            value: idle
+          - dps_val: Start
+            value: starting
+          - dps_val: Normal_operation
+            value: heating
+  - entity: binary_sensor
+    class: problem
+    category: diagnostic
+    dps:
+      - id: 15
+        type: bitfield
+        name: sensor
+        mapping:
+          - dps_val: 0
+            value: false
+          - value: true
+      - id: 15
+        type: bitfield
+        name: fault_code
+  - entity: binary_sensor
+    translation_key: defrost
+    category: diagnostic
+    dps:
+      - id: 7
+        type: boolean
+        name: sensor
+  - entity: sensor
+    class: temperature
+    translation_key: ambient_temperature
+    dps:
+      - id: 26
+        type: integer
+        name: sensor
+        unit: C
+        class: measurement
+  - entity: sensor
+    class: temperature
+    translation_key: inlet_temperature
+    category: diagnostic
+    dps:
+      - id: 16
+        type: integer
+        name: sensor
+        unit: C
+        class: measurement
+  - entity: sensor
+    class: temperature
+    translation_key: outlet_temperature
+    category: diagnostic
+    dps:
+      - id: 25
+        type: integer
+        name: sensor
+        unit: C
+        class: measurement
+  - entity: sensor
+    name: Compressor frequency
+    class: frequency
+    category: diagnostic
+    dps:
+      - id: 20
+        type: integer
+        name: sensor
+        unit: Hz
+        class: measurement
+  - entity: binary_sensor
+    name: Compressor
+    class: running
+    category: diagnostic
+    icon: "mdi:heat-pump"
+    dps:
+      - id: 27
+        type: boolean
+        name: sensor
+  - entity: binary_sensor
+    name: Fan
+    class: running
+    category: diagnostic
+    icon: "mdi:fan"
+    dps:
+      - id: 29
+        type: boolean
+        name: sensor
+  - entity: binary_sensor
+    name: Water pump
+    class: running
+    category: diagnostic
+    icon: "mdi:pump"
+    dps:
+      - id: 30
+        type: boolean
+        name: sensor
+  - entity: binary_sensor
+    name: Element
+    class: running
+    category: diagnostic
+    icon: "mdi:heating-coil"
+    dps:
+      - id: 32
+        type: boolean
+        name: sensor
